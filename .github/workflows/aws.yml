@@ -1,4 +1,4 @@
-name: CI/CD Pipeline
+name: workflow
 
 on:
   push:
@@ -63,8 +63,9 @@ jobs:
             echo "ECR_REGISTRY or ECR_REPOSITORY is empty. Exiting."
             exit 1
           fi
-          # Build a docker container and push it to ECR
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -f Esports/dockerfile .
+          # Change directory to Esports and build Docker image
+          cd Esports
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
