@@ -56,9 +56,14 @@ jobs:
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
           IMAGE_TAG: latest
         run: |
-          # Build a docker container and
-          # push it to ECR so that it can
-          # be deployed to ECS.
+          echo "ECR_REGISTRY=$ECR_REGISTRY"
+          echo "ECR_REPOSITORY=$ECR_REPOSITORY"
+          # Ensure variables are not empty
+          if [ -z "$ECR_REGISTRY" ] || [ -z "$ECR_REPOSITORY" ]; then
+            echo "ECR_REGISTRY or ECR_REPOSITORY is empty. Exiting."
+            exit 1
+          fi
+          # Build a docker container and push it to ECR
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
@@ -84,7 +89,6 @@ jobs:
       - name: Pull latest image
         run: |
           docker pull ${{ secrets.AWS_ECR_LOGIN_URI }}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
-
 
       - name: Run Docker Image to serve users
         run: |
