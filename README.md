@@ -16,3 +16,6 @@
 - Logistic Regression
 - Decision Tree
 - XG Boost
+
+# Deployment 
+- Deployed in AWS using CI/CD pipeline and created IAM rules to keep resource safe and secure. 
